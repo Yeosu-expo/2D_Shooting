@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - p_bullet
   - item
+  - EnemyB
   layers:
   - Default
   - TransparentFX

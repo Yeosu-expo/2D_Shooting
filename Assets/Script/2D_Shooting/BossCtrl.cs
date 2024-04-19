@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnermyCtrl : MonoBehaviour
+public class BossCtrl : MonoBehaviour
 {
     [SerializeField] private int e_speed;
     [SerializeField] private int e_Type;
     [SerializeField] private int b_Type;
-     
+
     private int iter = 0;
     private float attackPoint;
-    private Transform targetTr;
+    public Transform targetTr;
 
     public GameObject e_Bullet;
-    public Transform firePos; // Ï¥ùÏïåÏù¥ Î∞úÏÇ¨Îê† ÏúÑÏπò
+    public Transform firePos; // √—æÀ¿Ã πﬂªÁµ… ¿ßƒ°
 
     private float t = 0f;
 
@@ -23,6 +23,9 @@ public class EnermyCtrl : MonoBehaviour
 
     private Animator animator;
     public GameObject item;
+    public GameObject coin;
+
+    public int health = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -30,12 +33,10 @@ public class EnermyCtrl : MonoBehaviour
         e_speed = 1;
         attackPoint = Random.Range(2.0f, 4.0f);
 
-        e_Bullet = GameObject.Find("Enemy Bullet 2");
-        firePos = transform.Find("E Fire Position").transform;
-
         animator = gameObject.GetComponent<Animator>();
-        targetTr = GameObject.FindWithTag("Player").GetComponent<Transform>();
-
+        //targetTr = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        coin = GameObject.Find("Coin 0");
+        item = GameObject.Find("Power 0");
     }
 
     // Update is called once per frame
@@ -46,7 +47,7 @@ public class EnermyCtrl : MonoBehaviour
 
         Vector2 attackDirection = (targetTr.position - transform.position).normalized;
         //transform.Translate(attackDirection * e_speed * Time.deltaTime, Space.World);
-        float _angle = Mathf.Atan2(attackDirection.x, -attackDirection.y) * Mathf.Rad2Deg;
+        float _angle = Mathf.Atan2(attackDirection.x, -attackDirection.y) * Mathf.Rad2Deg - 180;
         Quaternion _rot = Quaternion.Euler(0, 0, _angle + 180);
 
 
@@ -95,9 +96,10 @@ public class EnermyCtrl : MonoBehaviour
                 switch (b_Type)
                 {
                     case 1:
-                        Instantiate(e_Bullet, transform.position, Quaternion.Euler(0, 0, 180));
+                        Instantiate(e_Bullet, transform.position, Quaternion.Euler(0, 0, 0));
                         break;
                     case 2:
+                        //_rot.z -= 180;
                         Instantiate(e_Bullet, transform.position, _rot);
                         break;
                     case 3:
@@ -107,7 +109,7 @@ public class EnermyCtrl : MonoBehaviour
                     case 4:
                         for (int i = 0; i < 5; i++)
                         {
-                            Instantiate(e_Bullet, transform.position, Quaternion.Euler(0, 0, _angle + 140 + i*20));
+                            Instantiate(e_Bullet, transform.position, Quaternion.Euler(0, 0, _angle + 140 + i * 20));
                         }
                         break;
                     default:
@@ -143,36 +145,34 @@ public class EnermyCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.tag == "p_bullet")
+        if (collider.tag == "p_bullet" && !animator.GetBool("isBoom"))
         {
-            Debug.Log("Attacked!");
-            animator.SetBool("isBoom", true);
+            health -= 1;
+            gameObject.GetComponent<SpriteRenderer>().color = Color.red;
 
-            Vector2 prePos = transform.position;
-            Quaternion quaternion = transform.rotation;
+            if (health <= 0)
+            {
+                animator.SetBool("isBoom", true);
 
-            Instantiate(item, prePos, quaternion);
+                Vector2 prePos = transform.position;
+                Quaternion quaternion = transform.rotation;
 
-            Destroy(gameObject, 1);
+                Instantiate(item, prePos, quaternion);
+                prePos.x += 0.5f;
+                Instantiate(coin, prePos, quaternion);
+                item.GetComponent<SpriteRenderer>().color = Color.yellow;  
+
+                Destroy(gameObject, 1);
+            }
+            else
+            {
+                Invoke("ReturnToOrignalSprite", 1);
+            }
         }
     }
 
-    private IEnumerator BaizerCurve()
+    private void ReturnToOrignalSprite()
     {
-        t += Time.deltaTime * e_speed;
-
-        while(t<1)
-        {
-            gizmoPosition =
-                Mathf.Pow(1 - t, 3) * wayPoints[0].position
-                + 3 * t * Mathf.Pow(1 - t, 2) * wayPoints[1].position
-                + 3 * t * (1 - t) * wayPoints[2].position
-                + Mathf.Pow(t, 3) * wayPoints[3].position;
-
-            transform.position = gizmoPosition;
-            yield return new WaitForEndOfFrame();
-        }
-
-        t = 0f;
+        gameObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
 }
