@@ -13,9 +13,9 @@ public class BossCtrl : MonoBehaviour
     public Transform targetTr;
 
     public GameObject e_Bullet;
-    public Transform firePos; // 총알이 발사될 위치
+    public Transform firePos; // ?????? ?????? ????
 
-    private float t = 0f;
+    //private float t = 0f;
 
 
     public Transform[] wayPoints;
@@ -160,7 +160,9 @@ public class BossCtrl : MonoBehaviour
                 Instantiate(item, prePos, quaternion);
                 prePos.x += 0.5f;
                 Instantiate(coin, prePos, quaternion);
-                item.GetComponent<SpriteRenderer>().color = Color.yellow;  
+                item.GetComponent<SpriteRenderer>().color = Color.yellow;
+
+                GameObject.Find("GameManager").GetComponent<gameManagerCtrl>().Score += 5;
 
                 Destroy(gameObject, 1);
             }

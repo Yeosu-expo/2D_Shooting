@@ -26,6 +26,9 @@ public class PlayerCtrl : MonoBehaviour
     private float greenBarX;
 
     public int life = 3;
+    [SerializeField] private int unbeatableTime;
+    private bool unbeatableSign;
+    public bool gameoverSignFromPlayer;
 
 
     // Start is called before the first frame update
@@ -42,12 +45,14 @@ public class PlayerCtrl : MonoBehaviour
         greenBar = GameObject.Find("GreenBar");
         greenBarX = greenBar.transform.localScale.x;
         nowHealth = health;
+        unbeatableSign = false;
+        gameoverSignFromPlayer = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        healthBar.position = new Vector3 (transform.position.x+4.98f, transform.position.y+0.9f, 0f);
+        healthBar.position = new Vector3 (transform.position.x+0.03f, transform.position.y+0.9f, 0f);
         
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
@@ -81,7 +86,7 @@ public class PlayerCtrl : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Bullet" )
+        if (collision.tag == "Bullet" && !unbeatableSign)
         {
             gameObject.GetComponent<SpriteRenderer>().color = Color.red;
 
@@ -99,7 +104,7 @@ public class PlayerCtrl : MonoBehaviour
             nowHealth -= damage;
             if(nowHealth <= 0)
             {
-                CheckLifeAndHeal();
+                StartCoroutine(CheckLifeAndHeal());
             }
 
 
@@ -112,12 +117,12 @@ public class PlayerCtrl : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().color = Color.white;
     }
 
-    private void CheckLifeAndHeal()
+    private IEnumerator CheckLifeAndHeal()
     {
         life -= 1;
         if(life <= 0) // 게임오버
         {
-            
+            gameoverSignFromPlayer = true;
         }
         else // 무적 및 회복
         {
@@ -133,6 +138,11 @@ public class PlayerCtrl : MonoBehaviour
             greenBar.transform.parent = healthBar;
 
             // 무적
+            unbeatableSign = true;
+            yield return new WaitForSeconds(unbeatableTime);
+            unbeatableSign = false;
         }
+
+        yield return null;
     }
 }

@@ -156,6 +156,8 @@ public class EnermyCtrl : MonoBehaviour
             prePos.x += 0.1f;
             Instantiate(coin, prePos, quaternion);
 
+            GameObject.Find("GameManager").GetComponent<gameManagerCtrl>().Score += 1;
+
             Destroy(gameObject, 1);
         }
     }

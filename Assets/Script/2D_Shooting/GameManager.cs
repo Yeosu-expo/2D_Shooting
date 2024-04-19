@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject Enemy03;
 
     public int maxEnemy = 10;
-    private float createTime = 1.0f;
+    //private float createTime = 1.0f;
 
     public bool isGameover = false;
 
