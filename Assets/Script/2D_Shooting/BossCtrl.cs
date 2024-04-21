@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class BossCtrl : MonoBehaviour
 {
     [SerializeField] private int e_speed;
@@ -49,6 +48,7 @@ public class BossCtrl : MonoBehaviour
         //transform.Translate(attackDirection * e_speed * Time.deltaTime, Space.World);
         float _angle = Mathf.Atan2(attackDirection.x, -attackDirection.y) * Mathf.Rad2Deg - 180;
         Quaternion _rot = Quaternion.Euler(0, 0, _angle + 180);
+
 
 
         if (transform.position.y > attackPoint)
@@ -147,7 +147,7 @@ public class BossCtrl : MonoBehaviour
     {
         if (collider.tag == "p_bullet" && !animator.GetBool("isBoom"))
         {
-            health -= 1;
+            health -= collider.GetComponent<BulletCtrl>().bulletDamage;
             gameObject.GetComponent<SpriteRenderer>().color = Color.red;
 
             if (health <= 0)
@@ -160,7 +160,6 @@ public class BossCtrl : MonoBehaviour
                 Instantiate(item, prePos, quaternion);
                 prePos.x += 0.5f;
                 Instantiate(coin, prePos, quaternion);
-                item.GetComponent<SpriteRenderer>().color = Color.yellow;
 
                 GameObject.Find("GameManager").GetComponent<gameManagerCtrl>().Score += 5;
 

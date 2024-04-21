@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using BasicFunc;
 
 public class PlayerCtrl : MonoBehaviour
 {
@@ -17,8 +18,8 @@ public class PlayerCtrl : MonoBehaviour
     private Animator animator;
 
     public int wallet = 0;
-    [SerializeField] private int health = 3;
-    private int nowHealth;
+    public int health = 3;
+    public int nowHealth;
     public int powerPoint = 0;
 
     private Transform healthBar;
@@ -26,10 +27,16 @@ public class PlayerCtrl : MonoBehaviour
     private float greenBarX;
 
     public int life = 3;
+    public int lifeSet = 3;
     [SerializeField] private int unbeatableTime;
     private bool unbeatableSign;
     public bool gameoverSignFromPlayer;
 
+    // 플레이어 이동
+    public GameObject JoyStick;
+    public Vector2 controlVector;
+
+    public bool isFire = false; // 플레이어 총알 발사 신호
 
     // Start is called before the first frame update
     void Start()
@@ -52,19 +59,16 @@ public class PlayerCtrl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        StartCoroutine(CheckLifeAndHeal());
         healthBar.position = new Vector3 (transform.position.x+0.03f, transform.position.y+0.9f, 0f);
-        
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
 
-        animator.SetFloat("p_hori", h);
+        if (JoyStick.GetComponent<ControllerCtrl>().isInput)
+        {
+            PlayerControlHandler();
+        }
 
-        Vector3 moveDir = Vector3.up * v + Vector3.right * h;
-
-        transform.Translate(moveDir * speed * Time.deltaTime);
-
-        // 마우스 왼쪽 버튼 클릭 시 총알 발사
-        if (Input.GetMouseButton(0))
+        // 마우스 왼쪽 버튼 클릭 시 총알 발사 >> 버튼클릭
+        if (isFire)
         {
             iter++;
             if (iter % 60 == 0) // 일정 간격으로 총알 발사
@@ -102,11 +106,6 @@ public class PlayerCtrl : MonoBehaviour
             greenBar.transform.parent = healthBar;
 
             nowHealth -= damage;
-            if(nowHealth <= 0)
-            {
-                StartCoroutine(CheckLifeAndHeal());
-            }
-
 
             Invoke("ReturnToOrignalSprite", 1);
         }
@@ -119,15 +118,18 @@ public class PlayerCtrl : MonoBehaviour
 
     private IEnumerator CheckLifeAndHeal()
     {
-        life -= 1;
-        if(life <= 0) // 게임오버
+        if (nowHealth <= 0)
+        {
+            life -= 1;
+        }
+
+        if(life == 0) // 게임오버
         {
             gameoverSignFromPlayer = true;
         }
-        else // 무적 및 회복
+        else if (life > 0 && nowHealth <= 0)// 무적 및 회복
         {
             // 회복
-            Debug.Log("DEAD");
             nowHealth = health;
             Vector3 greenScale = new Vector3(1, 0.09f, 1);
             greenBar.transform.parent = null;
@@ -144,5 +146,19 @@ public class PlayerCtrl : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    private void PlayerControlHandler()
+    {
+        animator.SetFloat("p_hori", controlVector.x);
+
+        Vector3 moveDir = Vector3.up * controlVector.y + Vector3.right * controlVector.x;
+
+        if (BasicFunc.BasicScript.IsOut(gameObject, moveDir, 3f, -3f, 5, -5))
+        {
+            return;
+        }
+
+        transform.Translate(moveDir * speed * Time.deltaTime);
     }
 }

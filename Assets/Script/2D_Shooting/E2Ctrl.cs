@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class E2Ctrl : MonoBehaviour
 {
     [SerializeField] private int e_speed;

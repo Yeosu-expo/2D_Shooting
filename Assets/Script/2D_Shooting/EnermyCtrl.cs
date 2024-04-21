@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using BasicFunc;
 public class EnermyCtrl : MonoBehaviour
 {
     [SerializeField] private int e_speed;

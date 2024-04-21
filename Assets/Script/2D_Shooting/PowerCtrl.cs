@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PowerCtrl : MonoBehaviour
 {
     public GameObject p_bullet_upgraded;

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class BulletCtrl : MonoBehaviour
 {
     [SerializeField] private int bulletSpeed = 10;
@@ -16,5 +15,6 @@ public class BulletCtrl : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector2.up*bulletSpeed*Time.deltaTime , Space.Self);
+
     }
 }
