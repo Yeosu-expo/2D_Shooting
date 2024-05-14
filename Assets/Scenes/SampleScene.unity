@@ -282,6 +282,8 @@ MonoBehaviour:
   enemyBCount: 5
   enemyCSpawnInterval: 1
   enemyCCount: 5
+  GameOverPanel: {fileID: 0}
+  Score: 0
 --- !u!1 &363436695
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,8 +556,11 @@ MonoBehaviour:
   level: 3
   type: 1
   wallet: 0
-  health: 0
+  health: 3
   powerPoint: 0
+  life: 3
+  unbeatableTime: 0
+  gameoverSignFromPlayer: 0
 --- !u!50 &411370261
 Rigidbody2D:
   serializedVersion: 4
@@ -1058,8 +1063,8 @@ Transform:
   m_GameObject: {fileID: 725785443}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0788853, y: -0.22445893, z: 0.008063748}
-  m_LocalScale: {x: 0.97348, y: 0.090166755, z: 0.97348}
+  m_LocalPosition: {x: -5, y: -0.22445893, z: 0.008063748}
+  m_LocalScale: {x: 1, y: 0.09, z: 0.97348}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2066925644}
@@ -1439,8 +1444,8 @@ Transform:
   m_GameObject: {fileID: 1324072652}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.08188531, y: -0.23545885, z: 0.008063748}
-  m_LocalScale: {x: 0.97348, y: 0.12198541, z: 0.97348}
+  m_LocalPosition: {x: -5, y: -0.23545885, z: 0.008063748}
+  m_LocalScale: {x: 1, y: 0.12, z: 0.97348}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2066925644}
@@ -2076,6 +2081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletSpeed: 10
+  bulletDamage: 1
 --- !u!50 &1834364642
 Rigidbody2D:
   serializedVersion: 4
@@ -2276,7 +2282,7 @@ Transform:
   m_GameObject: {fileID: 2066925643}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.78, y: -5.43, z: -0.008063748}
+  m_LocalPosition: {x: -5, y: -5.43, z: -0.008063748}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2851,6 +2857,10 @@ PrefabInstance:
     - target: {fileID: 1714137857946130800, guid: b8e660e48875b6e48a583d70690cd213, type: 3}
       propertyPath: m_Name
       value: Enemy Bullet 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714137857946130800, guid: b8e660e48875b6e48a583d70690cd213, type: 3}
+      propertyPath: m_TagString
+      value: Bullet
       objectReference: {fileID: 0}
     - target: {fileID: 7295314691496268907, guid: b8e660e48875b6e48a583d70690cd213, type: 3}
       propertyPath: m_LocalPosition.x
